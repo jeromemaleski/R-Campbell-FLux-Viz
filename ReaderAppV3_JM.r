@@ -37,12 +37,16 @@ station<-select.list(c("Ogletree 9877", "Ponder 9690"), preselect = NULL, multip
 if (station =="Ogletree 9877"){
 
   rainMulti <-0.1
+  location<-"Ogletree_9877"
   
 } else if (station =="Ponder 9690"){
   rainMulti<-1
-} else
+  location<-"Ponder_9690"
+} else {
   rainMulti<-1
-  
+  location<-"_"
+}  
+
 ###########################################################
 #### Plot all columns -----
 # function to plot columns in a DF, for period of record in df
@@ -63,7 +67,7 @@ plotdf.all <- function(df, pos, label, yaxislab, scale){
   ylim <- range(pretty(c(maxy, miny)))
   leglab <- names(df)[2:ncol]
   dt <- df[, 1]
-  plot(dt, df[,2], type="l", col=colors[1], main=label, ylab=yaxislab,
+  plot(dt, df[,2], type="l", col=colors[1], main=label,sub=location, ylab=yaxislab,
        xlab="", ylim=ylim, cex=scale)
   if (ncol > 2) {
     for (i in 3:ncol) {
@@ -193,7 +197,7 @@ lastrec <- df.diag[1, "Max"]
 enddate <- as.POSIXct(lastrec)
 dateonly <- strftime(enddate, "%Y-%m-%d")
 
-write.csv(df.diag, paste0("Fluxdiag",dateonly,".csv") , row.names=FALSE)
+#write.csv(df.diag, paste0("Fluxdiag",dateonly,".csv") , row.names=FALSE)
 
 # Set up for plots
 # pscale=1 good for interactive
@@ -201,8 +205,9 @@ write.csv(df.diag, paste0("Fluxdiag",dateonly,".csv") , row.names=FALSE)
 pscale <- 1
 pscale <- 2
 if (pscale > 1){
-  outplots <- paste("Fluxplots", dateonly, ".pdf", sep="")
-  pdf(file=outplots, title=outplots)
+  outplots <- paste("out/","Fluxplots_",location,"_", dateonly, ".pdf", sep="")
+  #title <- paste("Fluxplots_",location,"_", dateonly, ".pdf", sep="")
+  pdf(file=outplots)
 }
 
 ###########################################################
